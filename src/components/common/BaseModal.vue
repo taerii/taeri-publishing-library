@@ -32,6 +32,10 @@
 import BaseButton from './BaseButton.vue';
 import BaseIcon from './BaseIcon.vue';
 
+// 열려 있는 모달의 스택(맨 뒤가 가장 위). 겹친 모달에서 맨 위 모달만 키 입력에 반응시킨다.
+const openStack = [];
+let modalSeq = 0;
+
 export default {
   name: 'BaseModal',
   components: { BaseButton, BaseIcon },
@@ -45,9 +49,14 @@ export default {
     },
     closeOnOverlay: { type: Boolean, default: true },
   },
+  created() {
+    modalSeq += 1;
+    this.modalUid = modalSeq;
+  },
   watch: {
     open(v) {
       if (v) {
+        if (!openStack.includes(this.modalUid)) openStack.push(this.modalUid);
         document.addEventListener('keydown', this.onKey);
         document.body.style.overflow = 'hidden';
         this.$nextTick(() => {
@@ -63,6 +72,8 @@ export default {
   },
   methods: {
     onKey(e) {
+      // 겹쳐 열린 경우 가장 위에 있는 모달만 처리
+      if (openStack[openStack.length - 1] !== this.modalUid) return;
       if (e.key === 'Escape') {
         this.close();
         return;
@@ -95,7 +106,10 @@ export default {
     },
     teardown() {
       document.removeEventListener('keydown', this.onKey);
-      document.body.style.overflow = '';
+      const i = openStack.indexOf(this.modalUid);
+      if (i !== -1) openStack.splice(i, 1);
+      // 아래에 다른 모달이 아직 열려 있으면 배경 스크롤 잠금을 유지
+      if (openStack.length === 0) document.body.style.overflow = '';
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <form :class="$style.form" @submit.prevent="submit">
+  <form :class="$style.form" @submit.prevent="requestSubmit">
     <div :class="$style.grid">
       <BaseInput
         v-model="draft.title"
@@ -142,6 +142,16 @@
         {{ isEdit ? '변경 저장' : '등록' }}
       </BaseButton>
     </div>
+
+    <!-- 수정 저장 전 확인 (신규 등록에는 표시하지 않음) -->
+    <ConfirmDialog
+      :open="confirmOpen"
+      title="저장 확인"
+      message="수정한 내용을 저장하시겠습니까?"
+      confirm-text="저장"
+      @confirm="confirmSave"
+      @cancel="confirmOpen = false"
+    />
   </form>
 </template>
 
@@ -153,6 +163,7 @@ import TagInput from '@/components/common/TagInput.vue';
 import BaseButton from '@/components/common/BaseButton.vue';
 import BaseIcon from '@/components/common/BaseIcon.vue';
 import CodeEditor from '@/components/editor/CodeEditor.vue';
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 import { SNIPPET_LANGS, createEmptyDraft } from '@/constants/templateTypes';
 import { assetRepo } from '@/db';
 import { pickFile } from '@/utils/download';
@@ -172,6 +183,7 @@ export default {
     BaseButton,
     BaseIcon,
     CodeEditor,
+    ConfirmDialog,
   },
   props: {
     /** 편집 대상 (없으면 신규) */
@@ -194,6 +206,7 @@ export default {
       thumbFile: null,
       thumbObjectUrl: '',
       existingThumbUrl: '',
+      confirmOpen: false,
     };
   },
   computed: {
@@ -271,6 +284,19 @@ export default {
       if (!this.draft.categoryId) errors.categoryId = '카테고리를 선택해 주세요.';
       this.errors = errors;
       return Object.keys(errors).length === 0;
+    },
+    /** 저장 버튼/Enter: 검증 후, 수정이면 확인 창을 먼저 띄운다 */
+    requestSubmit() {
+      if (!this.validate()) return;
+      if (this.isEdit) {
+        this.confirmOpen = true;
+      } else {
+        this.submit();
+      }
+    },
+    confirmSave() {
+      this.confirmOpen = false;
+      this.submit();
     },
     async submit() {
       if (!this.validate()) return;

@@ -26,21 +26,19 @@ export default {
 <style module>
 .card {
   background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
+  border: none;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--shadow-card);
 }
 .padded {
   padding: var(--space-5);
 }
 .interactive {
   cursor: pointer;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 .interactive:hover {
-  border-color: var(--color-brand-200);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
 }
 </style>

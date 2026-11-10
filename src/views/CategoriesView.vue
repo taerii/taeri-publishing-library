@@ -77,6 +77,16 @@
       </template>
     </BaseModal>
 
+    <!-- 이름 수정 저장 전 확인 (새 카테고리 추가에는 표시하지 않음) -->
+    <ConfirmDialog
+      :open="saveConfirmOpen"
+      title="저장 확인"
+      message="수정한 내용을 저장하시겠습니까?"
+      confirm-text="저장"
+      @confirm="confirmSave"
+      @cancel="saveConfirmOpen = false"
+    />
+
     <!-- 삭제 모달 (사용 중이면 재할당) -->
     <BaseModal
       :open="deleteOpen"
@@ -121,6 +131,7 @@ import BaseSelect from '@/components/common/BaseSelect.vue';
 import BaseModal from '@/components/common/BaseModal.vue';
 import BaseIcon from '@/components/common/BaseIcon.vue';
 import BaseTag from '@/components/common/BaseTag.vue';
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 import { TEMPLATE_TYPES } from '@/constants/templateTypes';
 
 export default {
@@ -133,10 +144,12 @@ export default {
     BaseModal,
     BaseIcon,
     BaseTag,
+    ConfirmDialog,
   },
   data() {
     return {
       formOpen: false,
+      saveConfirmOpen: false,
       editing: null,
       form: { name: '', type: 'component' },
       formError: '',
@@ -206,6 +219,18 @@ export default {
         this.formError = '이름을 입력해 주세요.';
         return;
       }
+      // 수정이면 확인 후 저장, 신규 추가는 바로 저장
+      if (this.editing) {
+        this.saveConfirmOpen = true;
+        return;
+      }
+      await this.persistForm(name);
+    },
+    async confirmSave() {
+      this.saveConfirmOpen = false;
+      await this.persistForm(this.form.name.trim());
+    },
+    async persistForm(name) {
       try {
         if (this.editing) {
           await this.updateCategory({ id: this.editing.id, patch: { name } });
@@ -281,8 +306,9 @@ export default {
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
+  border: none;
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 }
 .rowMain {
   display: flex;

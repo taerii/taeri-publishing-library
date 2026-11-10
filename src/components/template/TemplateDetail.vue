@@ -107,6 +107,16 @@
         <PreviewFrame :template="previewTemplate" />
       </section>
     </div>
+
+    <!-- 코드 수정 저장 전 확인 -->
+    <ConfirmDialog
+      :open="confirmOpen"
+      title="저장 확인"
+      message="수정한 내용을 저장하시겠습니까?"
+      confirm-text="저장"
+      @confirm="confirmSave"
+      @cancel="confirmOpen = false"
+    />
   </div>
 </template>
 
@@ -116,6 +126,7 @@ import BaseTag from '@/components/common/BaseTag.vue';
 import BaseIcon from '@/components/common/BaseIcon.vue';
 import CodeEditor from '@/components/editor/CodeEditor.vue';
 import PreviewFrame from '@/components/preview/PreviewFrame.vue';
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 import { copyToClipboard } from '@/utils/clipboard';
 
 /**
@@ -128,7 +139,14 @@ import { copyToClipboard } from '@/utils/clipboard';
  */
 export default {
   name: 'TemplateDetail',
-  components: { BaseButton, BaseTag, BaseIcon, CodeEditor, PreviewFrame },
+  components: {
+    BaseButton,
+    BaseTag,
+    BaseIcon,
+    CodeEditor,
+    PreviewFrame,
+    ConfirmDialog,
+  },
   props: {
     template: { type: Object, required: true },
     categoryName: { type: String, default: '미분류' },
@@ -137,6 +155,7 @@ export default {
     return {
       activeTab: 'html',
       editMode: false,
+      confirmOpen: false,
       code: this.snapshot(),
       previewCode: this.snapshot(),
       debounceTimer: null,
@@ -209,7 +228,13 @@ export default {
         };
       }, 300);
     },
+    /** 저장 버튼: 바로 저장하지 않고 확인 창을 먼저 띄운다 */
     saveEdit() {
+      if (!this.dirty) return;
+      this.confirmOpen = true;
+    },
+    confirmSave() {
+      this.confirmOpen = false;
       this.$emit('save', {
         id: this.template.id,
         patch: {

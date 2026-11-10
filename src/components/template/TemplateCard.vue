@@ -124,7 +124,6 @@ export default {
   height: 140px;
   overflow: hidden;
   background: var(--surface-sunken);
-  border-bottom: 1px solid var(--border-subtle);
 }
 .thumb img {
   width: 100%;

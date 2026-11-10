@@ -62,7 +62,7 @@ export const editorTheme = EditorView.theme({
     backgroundColor: 'var(--color-brand-50)',
   },
   '.cm-activeLine': {
-    backgroundColor: 'rgba(244, 63, 94, 0.05)',
+    backgroundColor: 'rgba(199, 70, 112, 0.05)',
   },
   '&.cm-focused': {
     outline: 'none',

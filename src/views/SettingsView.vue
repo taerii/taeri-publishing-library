@@ -298,7 +298,8 @@ export default {
   margin-bottom: var(--space-4);
 }
 .danger {
-  border-color: var(--color-danger);
+  /* 테두리 대신 은은한 붉은 그림자로 위험 구역 표시 */
+  box-shadow: 0 2px 12px rgba(214, 69, 69, 0.14), 0 1px 2px rgba(214, 69, 69, 0.08);
 }
 .confirmMsg {
   color: var(--text-primary);

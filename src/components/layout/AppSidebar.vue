@@ -67,9 +67,9 @@ export default {
   z-index: var(--z-sidebar);
   display: flex;
   flex-direction: column;
-  background: var(--gradient-sidebar);
-  color: var(--color-neutral-300);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--surface-sidebar);
+  color: var(--text-secondary);
+  border-right: 1px solid var(--border-subtle);
 }
 .brand {
   display: flex;
@@ -77,7 +77,7 @@ export default {
   gap: var(--space-3);
   height: var(--topbar-height);
   padding: 0 var(--space-5);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border-subtle);
 }
 .brandIcon {
   display: inline-flex;
@@ -93,11 +93,11 @@ export default {
 .brandText {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: var(--text-inverse);
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 .brandAccent {
-  color: var(--color-brand-300);
+  color: var(--color-brand-600);
 }
 .nav {
   flex: 1;
@@ -116,13 +116,13 @@ export default {
   border-radius: var(--radius-md);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
-  color: var(--color-neutral-400);
+  color: var(--text-secondary);
   transition: background var(--transition-fast), color var(--transition-fast),
     transform var(--transition-fast);
 }
 .navItem:hover {
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--text-inverse);
+  background: var(--color-primary-light); /* #FCE8EF */
+  color: var(--color-primary-hover); /* #A9365D (글자 + 아이콘) */
 }
 .navItem:active {
   transform: scale(0.98);
@@ -141,7 +141,7 @@ export default {
   width: 3px;
   height: 20px;
   border-radius: var(--radius-full);
-  background: var(--color-brand-300);
+  background: var(--color-brand-600);
 }
 .navItemActive:hover {
   background: var(--gradient-brand);
@@ -152,11 +152,11 @@ export default {
 }
 .footer {
   padding: var(--space-4) var(--space-5);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border-subtle);
 }
 .footerText {
   font-size: var(--font-size-xs);
-  color: var(--color-neutral-500);
+  color: var(--text-muted);
 }
 .backdrop {
   display: none;

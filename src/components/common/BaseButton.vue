@@ -98,7 +98,7 @@ export default {
 }
 .primary:hover:not(:disabled) {
   filter: brightness(1.06);
-  box-shadow: 0 10px 24px -6px rgba(244, 63, 94, 0.55);
+  box-shadow: 0 10px 24px -6px rgba(199, 70, 112, 0.45);
 }
 .primary:active:not(:disabled) {
   transform: translateY(1px);
@@ -127,7 +127,7 @@ export default {
   color: var(--text-inverse);
 }
 .danger:hover:not(:disabled) {
-  background: #b91c1c;
+  background: #b93838;
 }
 
 .fullWidth {
