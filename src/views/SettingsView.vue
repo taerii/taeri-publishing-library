@@ -1,35 +1,35 @@
 <template>
-  <div>
+  <div class="setting">
     <PageHeader title="Settings" description="데이터 백업, 복원, 초기화를 관리합니다." />
 
     <!-- 저장 데이터 현황 -->
-    <BaseCard :class="$style.section">
-      <h2 :class="$style.sectionTitle">저장 데이터</h2>
-      <div :class="$style.stats">
-        <div :class="$style.stat">
-          <span :class="$style.statValue">{{ templates.length }}</span>
-          <span :class="$style.statLabel">템플릿</span>
+    <BaseCard class="setting-box">
+      <h2 class="setting-ttl">저장 데이터</h2>
+      <div class="setting-stats">
+        <div class="setting-stat">
+          <span class="setting-num">{{ templates.length }}</span>
+          <span class="setting-txt">템플릿</span>
         </div>
-        <div :class="$style.stat">
-          <span :class="$style.statValue">{{ categories.length }}</span>
-          <span :class="$style.statLabel">카테고리</span>
+        <div class="setting-stat">
+          <span class="setting-num">{{ categories.length }}</span>
+          <span class="setting-txt">카테고리</span>
         </div>
-        <div :class="$style.stat">
-          <span :class="$style.statValue">{{ favorites.length }}</span>
-          <span :class="$style.statLabel">즐겨찾기</span>
+        <div class="setting-stat">
+          <span class="setting-num">{{ favorites.length }}</span>
+          <span class="setting-txt">즐겨찾기</span>
         </div>
       </div>
-      <p :class="$style.note">
+      <p class="setting-note">
         이 앱은 브라우저 IndexedDB에 데이터를 저장합니다. 브라우저 데이터 삭제 시
         함께 지워질 수 있으니 정기적으로 백업하세요.
       </p>
     </BaseCard>
 
     <!-- 내보내기 -->
-    <BaseCard :class="$style.section">
-      <h2 :class="$style.sectionTitle">내보내기</h2>
-      <p :class="$style.desc">전체 데이터를 파일로 저장합니다. 팀 공유에도 사용할 수 있습니다.</p>
-      <div :class="$style.actions">
+    <BaseCard class="setting-box">
+      <h2 class="setting-ttl">내보내기</h2>
+      <p class="setting-desc">전체 데이터를 파일로 저장합니다. 팀 공유에도 사용할 수 있습니다.</p>
+      <div class="setting-btns">
         <BaseButton variant="secondary" :disabled="busy" @click="onExportJson">
           JSON 내보내기
         </BaseButton>
@@ -40,16 +40,16 @@
     </BaseCard>
 
     <!-- 가져오기 -->
-    <BaseCard :class="$style.section">
-      <h2 :class="$style.sectionTitle">가져오기 / 복원</h2>
-      <p :class="$style.desc">백업 파일을 불러옵니다. ID가 충돌할 때 처리 방식을 선택하세요.</p>
+    <BaseCard class="setting-box">
+      <h2 class="setting-ttl">가져오기 / 복원</h2>
+      <p class="setting-desc">백업 파일을 불러옵니다. ID가 충돌할 때 처리 방식을 선택하세요.</p>
       <BaseSelect
         v-model="strategy"
         label="ID 충돌 시"
         :options="strategyOptions"
-        :class="$style.strategy"
+        class="setting-select"
       />
-      <div :class="$style.actions">
+      <div class="setting-btns">
         <BaseButton variant="secondary" :disabled="busy" @click="onImportJson">
           JSON 가져오기
         </BaseButton>
@@ -60,9 +60,9 @@
     </BaseCard>
 
     <!-- 초기화 -->
-    <BaseCard :class="[$style.section, $style.danger]">
-      <h2 :class="$style.sectionTitle">데이터 초기화</h2>
-      <p :class="$style.desc">
+    <BaseCard class="setting-box danger">
+      <h2 class="setting-ttl">데이터 초기화</h2>
+      <p class="setting-desc">
         모든 템플릿과 카테고리를 삭제하고 기본 상태로 되돌립니다. 되돌릴 수 없습니다.
       </p>
       <BaseButton variant="danger" :disabled="busy" @click="resetStep = 1">
@@ -73,14 +73,14 @@
     <!-- 초기화 2단계 확인 -->
     <BaseModal :open="resetStep > 0" title="데이터 초기화 확인" size="sm" @close="cancelReset">
       <div v-if="resetStep === 1">
-        <p :class="$style.confirmMsg">
+        <p class="setting-msg">
           정말 모든 데이터를 삭제하시겠습니까? 템플릿 {{ templates.length }}개가
           영구 삭제됩니다.
         </p>
-        <p :class="$style.warnText">계속하기 전에 백업을 권장합니다.</p>
+        <p class="setting-warn">계속하기 전에 백업을 권장합니다.</p>
       </div>
       <div v-else>
-        <p :class="$style.confirmMsg">
+        <p class="setting-msg">
           확인을 위해 아래에 <strong>DELETE</strong>를 입력하세요.
         </p>
         <BaseInput v-model="confirmText" placeholder="DELETE" />
@@ -103,7 +103,7 @@
 
     <!-- 가져오기 결과 -->
     <BaseModal :open="resultOpen" title="가져오기 완료" size="sm" @close="resultOpen = false">
-      <ul v-if="importResult" :class="$style.resultList">
+      <ul v-if="importResult" class="setting-list">
         <li>템플릿: 추가 {{ importResult.templates.added }}, 덮어씀 {{ importResult.templates.overwritten }}, 건너뜀 {{ importResult.templates.skipped }}, 신규ID {{ importResult.templates.renamed }}</li>
         <li>카테고리: 추가 {{ importResult.categories.added }}, 덮어씀 {{ importResult.categories.overwritten }}, 건너뜀 {{ importResult.categories.skipped }}, 신규ID {{ importResult.categories.renamed }}</li>
       </ul>
@@ -250,20 +250,24 @@ export default {
 };
 </script>
 
-<style module>
-.section {
+<style scoped>
+.setting-box {
   margin-bottom: var(--space-4);
 }
-.sectionTitle {
+/* 위험 구역: 테두리 대신 은은한 붉은 그림자로 표시 */
+.setting-box.danger {
+  box-shadow: 0 2px 12px rgba(214, 69, 69, 0.14), 0 1px 2px rgba(214, 69, 69, 0.08);
+}
+.setting-ttl {
   font-size: var(--font-size-lg);
   margin-bottom: var(--space-2);
 }
-.desc {
+.setting-desc {
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
   margin-bottom: var(--space-4);
 }
-.note {
+.setting-note {
   margin-top: var(--space-4);
   padding: var(--space-3);
   background: var(--color-info-bg);
@@ -271,45 +275,41 @@ export default {
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
 }
-.stats {
+.setting-stats {
   display: flex;
   gap: var(--space-8);
 }
-.stat {
+.setting-stat {
   display: flex;
   flex-direction: column;
 }
-.statValue {
+.setting-num {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--text-brand);
 }
-.statLabel {
+.setting-txt {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
 }
-.actions {
+.setting-btns {
   display: flex;
   gap: var(--space-3);
   flex-wrap: wrap;
 }
-.strategy {
+.setting-select {
   max-width: 280px;
   margin-bottom: var(--space-4);
 }
-.danger {
-  /* 테두리 대신 은은한 붉은 그림자로 위험 구역 표시 */
-  box-shadow: 0 2px 12px rgba(214, 69, 69, 0.14), 0 1px 2px rgba(214, 69, 69, 0.08);
-}
-.confirmMsg {
+.setting-msg {
   color: var(--text-primary);
   margin-bottom: var(--space-3);
 }
-.warnText {
+.setting-warn {
   color: var(--color-warning);
   font-size: var(--font-size-sm);
 }
-.resultList {
+.setting-list {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);

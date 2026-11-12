@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cat">
     <PageHeader title="Categories" description="카테고리를 추가, 수정, 삭제합니다.">
       <template #actions>
         <BaseButton variant="primary" @click="openCreate">
@@ -9,21 +9,21 @@
       </template>
     </PageHeader>
 
-    <section v-for="group in groups" :key="group.type" :class="$style.group">
-      <h2 :class="$style.groupTitle">
+    <section v-for="group in groups" :key="group.type" class="cat-section">
+      <h2 class="cat-ttl">
         {{ group.label }}
-        <span :class="$style.groupCount">{{ group.items.length }}</span>
+        <span class="cat-num">{{ group.items.length }}</span>
       </h2>
 
-      <div v-if="group.items.length" :class="$style.list">
-        <div v-for="cat in group.items" :key="cat.id" :class="$style.row">
-          <div :class="$style.rowMain">
-            <BaseIcon name="folder" :size="16" :class="$style.folderIcon" />
-            <span :class="$style.name">{{ cat.name }}</span>
+      <div v-if="group.items.length" class="cat-list">
+        <div v-for="cat in group.items" :key="cat.id" class="cat-item">
+          <div class="cat-main">
+            <BaseIcon name="folder" :size="16" class="cat-i" />
+            <span class="cat-name">{{ cat.name }}</span>
             <BaseTag v-if="cat.isDefault" size="sm">기본</BaseTag>
           </div>
-          <div :class="$style.rowRight">
-            <span :class="$style.usage">{{ countMap[cat.id] || 0 }}개 템플릿</span>
+          <div class="cat-side">
+            <span class="cat-use">{{ countMap[cat.id] || 0 }}개 템플릿</span>
             <BaseButton
               variant="ghost"
               size="sm"
@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-      <p v-else :class="$style.empty">이 유형에는 카테고리가 없습니다.</p>
+      <p v-else class="cat-empty">이 유형에는 카테고리가 없습니다.</p>
     </section>
 
     <!-- 생성/수정 모달 -->
@@ -55,7 +55,7 @@
       size="sm"
       @close="closeForm"
     >
-      <form :class="$style.form" @submit.prevent="submitForm">
+      <form class="cat-form" @submit.prevent="submitForm">
         <BaseInput
           v-model="form.name"
           label="이름 *"
@@ -94,11 +94,11 @@
       size="sm"
       @close="deleteOpen = false"
     >
-      <p :class="$style.delMsg">
+      <p class="cat-msg">
         "{{ deleteTarget && deleteTarget.name }}" 카테고리를 삭제합니다.
       </p>
-      <div v-if="deleteUsage > 0" :class="$style.reassign">
-        <p :class="$style.warn">
+      <div v-if="deleteUsage > 0" class="cat-reassign">
+        <p class="cat-warn">
           이 카테고리를 사용하는 템플릿이 {{ deleteUsage }}개 있습니다.
           삭제 전에 다른 카테고리로 이동해 주세요.
         </p>
@@ -108,7 +108,7 @@
           label="이동할 카테고리"
           :options="reassignOptions"
         />
-        <p v-else :class="$style.warn">
+        <p v-else class="cat-warn">
           이동할 다른 카테고리가 없습니다. 먼저 같은 유형의 카테고리를 추가해 주세요.
         </p>
       </div>
@@ -270,18 +270,18 @@ export default {
 };
 </script>
 
-<style module>
-.group {
+<style scoped>
+.cat-section {
   margin-bottom: var(--space-8);
 }
-.groupTitle {
+.cat-ttl {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   font-size: var(--font-size-lg);
   margin-bottom: var(--space-3);
 }
-.groupCount {
+.cat-num {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -294,12 +294,12 @@ export default {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
 }
-.list {
+.cat-list {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
-.row {
+.cat-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -310,47 +310,47 @@ export default {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
 }
-.rowMain {
+.cat-main {
   display: flex;
   align-items: center;
   gap: var(--space-3);
 }
-.folderIcon {
+.cat-i {
   color: var(--text-muted);
 }
-.name {
+.cat-name {
   font-weight: var(--font-weight-medium);
 }
-.rowRight {
+.cat-side {
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
-.usage {
+.cat-use {
   font-size: var(--font-size-sm);
   color: var(--text-muted);
   white-space: nowrap;
 }
-.empty {
+.cat-empty {
   padding: var(--space-4);
   color: var(--text-muted);
   font-size: var(--font-size-sm);
 }
-.form {
+.cat-form {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
-.delMsg {
+.cat-msg {
   color: var(--text-secondary);
   margin-bottom: var(--space-3);
 }
-.reassign {
+.cat-reassign {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
-.warn {
+.cat-warn {
   font-size: var(--font-size-sm);
   color: var(--color-warning);
   background: var(--color-warning-bg);

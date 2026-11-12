@@ -1,8 +1,8 @@
 <template>
-  <div :class="[$style.wrap, fullscreen && $style.fullscreen]">
-    <div :class="$style.toolbar">
+  <div class="preview" :class="{ full: fullscreen }">
+    <div class="preview-head">
       <DeviceSwitcher v-model="device" />
-      <div :class="$style.toolActions">
+      <div class="preview-act">
         <BaseButton variant="ghost" size="sm" icon-only aria-label="미리보기 새로고침" @click="refresh">
           <BaseIcon name="code" :size="15" />
         </BaseButton>
@@ -17,11 +17,11 @@
       </div>
     </div>
 
-    <div :class="$style.stage">
-      <div :class="$style.device" :style="deviceStyle">
+    <div class="preview-cont">
+      <div class="preview-box" :style="deviceStyle">
         <iframe
           ref="frame"
-          :class="$style.frame"
+          class="preview-frame"
           title="템플릿 미리보기"
           sandbox="allow-scripts"
           :srcdoc="srcdoc"
@@ -105,8 +105,8 @@ export default {
 };
 </script>
 
-<style module>
-.wrap {
+<style scoped>
+.preview {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -116,14 +116,14 @@ export default {
   overflow: hidden;
   background: var(--surface-sunken);
 }
-.fullscreen {
+.preview.full {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
   border-radius: 0;
   min-height: 100vh;
 }
-.toolbar {
+.preview-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -132,19 +132,19 @@ export default {
   background: var(--surface-raised);
   border-bottom: 1px solid var(--border-subtle);
 }
-.toolActions {
+.preview-act {
   display: flex;
   align-items: center;
   gap: var(--space-1);
 }
-.stage {
+.preview-cont {
   flex: 1;
   display: flex;
   justify-content: center;
   padding: var(--space-4);
   overflow: auto;
 }
-.device {
+.preview-box {
   height: 100%;
   background: var(--surface-raised);
   border-radius: var(--radius-sm);
@@ -152,7 +152,7 @@ export default {
   transition: width var(--transition-base);
   overflow: hidden;
 }
-.frame {
+.preview-frame {
   width: 100%;
   height: 100%;
   min-height: 300px;

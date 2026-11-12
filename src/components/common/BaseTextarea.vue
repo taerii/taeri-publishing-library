@@ -1,9 +1,10 @@
 <template>
-  <div :class="$style.field">
-    <label v-if="label" :class="$style.label" :for="inputId">{{ label }}</label>
+  <div class="field">
+    <label v-if="label" class="field-label" :for="inputId">{{ label }}</label>
     <textarea
       :id="inputId"
-      :class="[$style.textarea, mono && $style.mono, error && $style.hasError]"
+      class="field-ctrl textarea-ctrl"
+      :class="{ mono: mono, 'is-error': error }"
       :value="value"
       :rows="rows"
       :placeholder="placeholder"
@@ -11,8 +12,8 @@
       v-bind="$attrs"
       @input="$emit('input', $event.target.value)"
     />
-    <p v-if="error" :class="$style.error">{{ error }}</p>
-    <p v-else-if="hint" :class="$style.hint">{{ hint }}</p>
+    <p v-if="error" class="field-error">{{ error }}</p>
+    <p v-else-if="hint" class="field-hint">{{ hint }}</p>
   </div>
 </template>
 
@@ -44,50 +45,17 @@ export default {
 };
 </script>
 
-<style module>
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-.label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-secondary);
-}
-.textarea {
-  width: 100%;
+<!-- field / field-label / field-ctrl / field-hint / field-error 는 styles/common.css -->
+<style scoped>
+.textarea-ctrl {
+  height: auto;
   padding: var(--space-3);
-  background: var(--surface-raised);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
-  color: var(--text-primary);
   resize: vertical;
   line-height: var(--line-height-normal);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
-.textarea::placeholder {
-  color: var(--text-muted);
-}
-.textarea:focus {
-  outline: none;
-  border-color: var(--color-brand-500);
-  box-shadow: var(--focus-ring);
-}
-.mono {
+.textarea-ctrl.mono {
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
   tab-size: 2;
-}
-.hasError {
-  border-color: var(--color-danger);
-}
-.hint {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-}
-.error {
-  font-size: var(--font-size-xs);
-  color: var(--color-danger);
 }
 </style>

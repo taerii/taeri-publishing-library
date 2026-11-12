@@ -1,27 +1,29 @@
 <template>
   <div
     v-if="open"
-    :class="$style.overlay"
+    class="modal"
     @mousedown.self="onOverlay"
   >
     <div
       ref="panel"
-      :class="[$style.panel, $style[size]]"
+      class="modal-box"
+      :class="size"
       role="dialog"
       aria-modal="true"
       :aria-label="title"
       tabindex="-1"
     >
-      <header v-if="title" :class="$style.header">
-        <h2 :class="$style.title">{{ title }}</h2>
+      <!-- 제목이 없어도 닫기 버튼 줄은 항상 표시 (제목 없으면 버튼만 오른쪽에) -->
+      <header class="modal-head" :class="{ 'no-ttl': !title }">
+        <h2 v-if="title" class="modal-ttl">{{ title }}</h2>
         <BaseButton variant="ghost" size="sm" icon-only aria-label="닫기" @click="close">
           <BaseIcon name="close" :size="18" />
         </BaseButton>
       </header>
-      <div :class="$style.body">
+      <div class="modal-cont">
         <slot />
       </div>
-      <footer v-if="$slots.footer" :class="$style.footer">
+      <footer v-if="$slots.footer" class="modal-foot">
         <slot name="footer" />
       </footer>
     </div>
@@ -115,8 +117,8 @@ export default {
 };
 </script>
 
-<style module>
-.overlay {
+<style scoped>
+.modal {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
@@ -127,7 +129,7 @@ export default {
   padding: var(--space-12) var(--space-4);
   overflow-y: auto;
 }
-.panel {
+.modal-box {
   width: 100%;
   background: var(--surface-raised);
   border-radius: var(--radius-lg);
@@ -147,19 +149,19 @@ export default {
     opacity: 1;
   }
 }
-.sm {
+.modal-box.sm {
   max-width: 420px;
 }
-.md {
+.modal-box.md {
   max-width: 560px;
 }
-.lg {
+.modal-box.lg {
   max-width: 760px;
 }
-.xl {
+.modal-box.xl {
   max-width: 1040px;
 }
-.header {
+.modal-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -167,14 +169,23 @@ export default {
   padding: var(--space-5) var(--space-6);
   border-bottom: 1px solid var(--border-subtle);
 }
-.title {
+/* 제목 없는 모달: 닫기 버튼만 오른쪽에, 구분선 없이 얇게 */
+.modal-head.no-ttl {
+  justify-content: flex-end;
+  padding: var(--space-3) var(--space-3) 0;
+  border-bottom: none;
+}
+.modal-head.no-ttl + .modal-cont {
+  padding-top: var(--space-2);
+}
+.modal-ttl {
   font-size: var(--font-size-xl);
 }
-.body {
+.modal-cont {
   padding: var(--space-6);
   overflow-y: auto;
 }
-.footer {
+.modal-foot {
   display: flex;
   align-items: center;
   justify-content: flex-end;

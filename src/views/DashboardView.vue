@@ -1,98 +1,105 @@
 <template>
-  <div>
+  <div class="dashboard">
     <PageHeader title="Dashboard" description="등록된 템플릿 현황을 한눈에 확인합니다." />
 
     <!-- 통계 카드: 클릭하면 해당 메뉴로 이동 -->
-    <div :class="$style.stats">
-      <BaseCard
-        v-for="s in stats"
-        :key="s.key"
-        interactive
-        role="link"
-        tabindex="0"
-        :class="[$style.stat, s.primary && $style.statPrimary]"
-        :aria-label="s.label + ' ' + s.value + '개, 이동'"
-        @click="$router.push(s.to)"
-        @keydown.enter.native="$router.push(s.to)"
-      >
-        <span :class="$style.statIcon"><BaseIcon :name="s.icon" :size="20" /></span>
-        <span :class="$style.statBody">
-          <span :class="$style.statValue">{{ s.value }}</span>
-          <span :class="$style.statLabel">{{ s.label }}</span>
-        </span>
-      </BaseCard>
-    </div>
+    <section class="dashboard-section">
+      <div class="dashboard-grp">
+        <BaseCard
+          v-for="s in stats"
+          :key="s.key"
+          class="dashboard-box"
+          :class="{ 'type-02': s.primary }"
+          interactive
+          role="link"
+          tabindex="0"
+          :aria-label="s.label + ' ' + s.value + '개, 이동'"
+          @click="$router.push(s.to)"
+          @keydown.enter.native="$router.push(s.to)"
+        >
+          <span class="i i-box"><BaseIcon :name="s.icon" :size="20" /></span>
+          <span class="dashboard-info">
+            <strong class="dashboard-num">{{ s.value }}</strong>
+            <span class="dashboard-txt">{{ s.label }}</span>
+          </span>
+        </BaseCard>
+      </div>
+    </section>
 
-    <div :class="$style.columns">
-      <!-- 최근 활동 (등록순 / 수정순 전환) -->
-      <BaseCard :class="$style.panel">
-        <div :class="$style.panelHead">
-          <h2 :class="$style.panelTitle">최근 템플릿</h2>
-          <div :class="$style.seg" role="group" aria-label="정렬 기준">
-            <button
-              type="button"
-              :class="[$style.segBtn, recentTab === 'created' && $style.segActive]"
-              :aria-pressed="String(recentTab === 'created')"
-              @click="recentTab = 'created'"
-            >
-              등록순
-            </button>
-            <button
-              type="button"
-              :class="[$style.segBtn, recentTab === 'updated' && $style.segActive]"
-              :aria-pressed="String(recentTab === 'updated')"
-              @click="recentTab = 'updated'"
-            >
-              수정순
-            </button>
+    <section class="dashboard-section type-02">
+      <div class="dashboard-grp">
+        <!-- 최근 템플릿 (등록순 / 수정순 전환) -->
+        <BaseCard class="dashboard-box">
+          <div class="dashboard-head">
+            <h2 class="dashboard-ttl">최근 템플릿</h2>
+            <div class="dashboard-seg" role="group" aria-label="정렬 기준">
+              <button
+                type="button"
+                class="dashboard-btn"
+                :class="{ on: recentTab === 'created' }"
+                :aria-pressed="String(recentTab === 'created')"
+                @click="recentTab = 'created'"
+              >
+                등록순
+              </button>
+              <button
+                type="button"
+                class="dashboard-btn"
+                :class="{ on: recentTab === 'updated' }"
+                :aria-pressed="String(recentTab === 'updated')"
+                @click="recentTab = 'updated'"
+              >
+                수정순
+              </button>
+            </div>
           </div>
-        </div>
 
-        <!-- 항상 6줄 높이를 차지해서 탭 전환/항목 수와 상관없이 카드 높이가 변하지 않음 -->
-        <div :class="$style.recentBody">
-        <ul v-if="recent.length" :class="$style.list">
-          <li v-for="t in recent" :key="t.id">
-            <button type="button" :class="$style.item" @click="go(t)">
-              <span :class="$style.typeIcon">
-                <BaseIcon :name="typeIcon[t.type]" :size="16" />
-              </span>
-              <span :class="$style.itemText">
-                <span :class="$style.itemTitle">{{ t.title }}</span>
-                <span :class="$style.itemMeta">
-                  {{ typeLabel[t.type] }} · {{ categoryMap[t.categoryId] || '미분류' }}
-                </span>
-              </span>
-              <span :class="$style.itemTime">
-                {{ recentTab === 'created' ? '등록' : '수정' }}
-                {{ rel(recentTab === 'created' ? t.createdAt : t.updatedAt) }}
-              </span>
-            </button>
-          </li>
-        </ul>
-        <p v-else :class="[$style.emptyText, $style.recentEmpty]">{{ recentEmptyText }}</p>
-        </div>
-      </BaseCard>
+          <!-- 항상 6줄 높이를 차지해서 탭 전환/항목 수와 상관없이 카드 높이가 변하지 않음 -->
+          <div class="dashboard-cont">
+            <ul v-if="recent.length" class="dashboard-list">
+              <li v-for="t in recent" :key="t.id">
+                <button type="button" class="dashboard-item" @click="go(t)">
+                  <span class="i i-box i-sm">
+                    <BaseIcon :name="typeIcon[t.type]" :size="16" />
+                  </span>
+                  <span class="dashboard-info">
+                    <strong class="dashboard-ttl type-02">{{ t.title }}</strong>
+                    <span class="dashboard-desc">
+                      {{ typeLabel[t.type] }} · {{ categoryMap[t.categoryId] || '미분류' }}
+                    </span>
+                  </span>
+                  <time class="time" :datetime="iso(timeOf(t))">
+                    {{ recentTab === 'created' ? '등록' : '수정' }}
+                    {{ rel(timeOf(t)) }}
+                  </time>
+                </button>
+              </li>
+            </ul>
+            <p v-else class="dashboard-empty">{{ recentEmptyText }}</p>
+          </div>
+        </BaseCard>
 
-      <!-- 자주 사용하는 카테고리 (막대 그래프) -->
-      <BaseCard :class="$style.panel">
-        <div :class="$style.panelHead">
-          <h2 :class="$style.panelTitle">자주 사용하는 카테고리</h2>
-        </div>
+        <!-- 자주 사용하는 카테고리 (막대 그래프) -->
+        <BaseCard class="dashboard-box">
+          <div class="dashboard-head">
+            <h2 class="dashboard-ttl">자주 사용하는 카테고리</h2>
+          </div>
 
-        <ul v-if="topCategories.length" :class="$style.cats">
-          <li v-for="c in topCategories" :key="c.id" :class="$style.cat">
-            <div :class="$style.catHead">
-              <span :class="$style.catName">{{ c.name }}</span>
-              <span :class="$style.catCount">{{ c.count }}</span>
-            </div>
-            <div :class="$style.bar" aria-hidden="true">
-              <span :class="$style.barFill" :style="{ width: barWidth(c.count) + '%' }"></span>
-            </div>
-          </li>
-        </ul>
-        <p v-else :class="$style.emptyText">사용 중인 카테고리가 없습니다.</p>
-      </BaseCard>
-    </div>
+          <ul v-if="topCategories.length" class="dashboard-list type-02">
+            <li v-for="c in topCategories" :key="c.id">
+              <div class="dashboard-info type-02">
+                <span class="dashboard-txt">{{ c.name }}</span>
+                <span class="dashboard-txt type-02">{{ c.count }}</span>
+              </div>
+              <div class="bar" aria-hidden="true">
+                <span class="bar-fill" :style="{ width: barWidth(c.count) + '%' }"></span>
+              </div>
+            </li>
+          </ul>
+          <p v-else class="dashboard-empty">사용 중인 카테고리가 없습니다.</p>
+        </BaseCard>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -177,6 +184,13 @@ export default {
     rel(ts) {
       return formatRelative(ts);
     },
+    /** 현재 탭 기준 시각 (등록순: 등록 시각, 수정순: 수정 시각) */
+    timeOf(t) {
+      return this.recentTab === 'created' ? t.createdAt : t.updatedAt;
+    },
+    iso(ts) {
+      return new Date(ts).toISOString();
+    },
     go(t) {
       this.$router.push(TEMPLATE_TYPES[t.type].route);
     },
@@ -188,95 +202,125 @@ export default {
 };
 </script>
 
-<style module>
-/* ---------- 통계 카드 ---------- */
-.stats {
+<!--
+  클래스 규칙: {화면}-{역할}  (section > grp > box > list / ttl > txt > desc)
+  - 같은 이름이 둘 이상이면 type-02 로 구분 (반드시 .dashboard-box.type-02 처럼 짝지어 사용)
+  - 상태는 on
+  - i / time / bar 는 styles/common.css 의 공통 클래스
+-->
+<style scoped>
+/* ---------- section / grp ---------- */
+.dashboard-section {
+  margin-bottom: var(--space-6);
+}
+.dashboard-section.type-02 {
+  margin-bottom: 0;
+}
+.dashboard-grp {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: var(--space-4);
-  margin-bottom: var(--space-6);
 }
-.stat {
+.dashboard-section.type-02 .dashboard-grp {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: stretch; /* 두 카드의 높이를 같게 맞춤 */
+}
+@media (max-width: 960px) {
+  .dashboard-section.type-02 .dashboard-grp {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- box ---------- */
+.dashboard-box {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
 }
-.statIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  background: var(--color-primary-light); /* #FCE8EF */
-  color: var(--color-primary-hover); /* #A9365D */
+.dashboard-section.type-02 .dashboard-box {
+  gap: var(--space-4);
 }
-.statBody {
+/* 맨 앞 "전체 템플릿" 카드: 진한 핑크 채움 + 흰 글씨 (대비 약 4.6:1 이상) */
+.dashboard-box.type-02 {
+  background: var(--gradient-brand);
+}
+.dashboard-box.type-02 .i-box {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+.dashboard-box.type-02 .dashboard-num,
+.dashboard-box.type-02 .dashboard-txt {
+  color: #ffffff;
+}
+
+/* ---------- head / ttl / txt / desc ---------- */
+.dashboard-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.dashboard-ttl {
+  font-size: var(--font-size-lg);
+}
+/* 목록 항목 제목 */
+.dashboard-ttl.type-02 {
+  font-size: inherit;
+  font-weight: var(--font-weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dashboard-info {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
 }
-.statValue {
+/* 카테고리 이름 + 개수 한 줄 */
+.dashboard-info.type-02 {
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.dashboard-num {
   font-size: 32px;
   font-weight: var(--font-weight-bold);
   line-height: 1;
   color: var(--text-primary);
   letter-spacing: -0.02em;
 }
-.statLabel {
+.dashboard-txt {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
 }
-/* 맨 앞 "전체 템플릿" 카드: 진한 핑크 채움 + 흰 글씨 (대비 약 4.6:1 이상) */
-.stats .statPrimary {
-  background: var(--gradient-brand);
+.dashboard-info.type-02 .dashboard-txt {
+  color: var(--text-primary);
 }
-.stats .statPrimary .statIcon {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+.dashboard-info.type-02 .dashboard-txt.type-02 {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-hover);
 }
-.stats .statPrimary .statValue,
-.stats .statPrimary .statLabel {
-  color: #ffffff;
+.dashboard-desc {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
 }
-
-/* ---------- 하단 2단 레이아웃 ---------- */
-.columns {
-  display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-  gap: var(--space-4);
-  align-items: stretch; /* 두 카드의 높이를 같게 맞춤 */
-}
-@media (max-width: 960px) {
-  .columns {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-.panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-.panelHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-.panelTitle {
-  font-size: var(--font-size-lg);
+.dashboard-empty {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  padding: var(--space-4) 0;
 }
 
-/* 등록순 / 수정순 전환 */
-.seg {
+/* ---------- seg / btn : 등록순 / 수정순 전환 ---------- */
+.dashboard-seg {
   display: inline-flex;
   padding: 3px;
   gap: 2px;
   background: var(--surface-sunken);
   border-radius: var(--radius-md);
 }
-.segBtn {
+.dashboard-btn {
   padding: var(--space-1) var(--space-3);
   border: none;
   background: transparent;
@@ -287,14 +331,15 @@ export default {
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast);
 }
-.segActive {
+.dashboard-btn.on {
   background: var(--surface-raised);
   color: var(--color-primary-hover);
   box-shadow: var(--shadow-xs);
 }
 
-/* 최근 템플릿 목록: 한 줄 높이를 고정하고, 6줄 분량의 최소 높이를 확보 */
-.recentBody {
+/* ---------- cont / list / item ---------- */
+/* 최근 템플릿 영역: 한 줄 높이를 고정하고, 6줄 분량의 최소 높이를 확보 */
+.dashboard-cont {
   --dash-row-h: 56px;
   --dash-row-gap: 2px;
   display: flex;
@@ -302,7 +347,7 @@ export default {
   flex: 1;
   min-height: calc(var(--dash-row-h) * 6 + var(--dash-row-gap) * 5);
 }
-.recentEmpty {
+.dashboard-cont .dashboard-empty {
   flex: 1;
   display: flex;
   align-items: center;
@@ -310,12 +355,21 @@ export default {
   text-align: center;
   padding: var(--space-4);
 }
-.list {
+.dashboard-list {
   display: flex;
   flex-direction: column;
   gap: var(--dash-row-gap, 2px);
 }
-.item {
+/* 카테고리 목록 */
+.dashboard-list.type-02 {
+  gap: var(--space-4);
+}
+.dashboard-list.type-02 > li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.dashboard-item {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -330,90 +384,15 @@ export default {
   color: var(--text-primary);
   transition: background var(--transition-fast);
 }
-.item:hover {
+.dashboard-item:hover {
   background: var(--color-primary-light);
 }
-.typeIcon {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  background: var(--color-primary-light);
-  color: var(--color-primary-hover);
-}
-.item:hover .typeIcon {
+.dashboard-item:hover .i-box {
   background: var(--surface-raised);
 }
-.itemText {
+.dashboard-item .dashboard-info {
   flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
   gap: 2px;
-}
-.itemTitle {
-  font-weight: var(--font-weight-medium);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.itemMeta {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-}
-.itemTime {
-  flex-shrink: 0;
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-}
-
-/* 카테고리 막대 그래프 */
-.cats {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-.cat {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-.catHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-.catName {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-primary);
-}
-.catCount {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-primary-hover);
-}
-.bar {
-  height: 8px;
-  border-radius: var(--radius-full);
-  background: var(--color-primary-light);
-  overflow: hidden;
-}
-.barFill {
-  display: block;
-  height: 100%;
-  border-radius: var(--radius-full);
-  background: var(--gradient-brand);
-  transition: width var(--transition-base);
-}
-
-.emptyText {
-  color: var(--text-muted);
-  font-size: var(--font-size-sm);
-  padding: var(--space-4) 0;
 }
 </style>

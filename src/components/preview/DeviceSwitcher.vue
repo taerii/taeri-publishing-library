@@ -1,10 +1,11 @@
 <template>
-  <div :class="$style.switcher" role="group" aria-label="미리보기 화면 크기">
+  <div class="device" role="group" aria-label="미리보기 화면 크기">
     <button
       v-for="d in devices"
       :key="d.value"
       type="button"
-      :class="[$style.btn, value === d.value && $style.active]"
+      class="device-btn"
+      :class="{ on: value === d.value }"
       :aria-pressed="String(value === d.value)"
       :title="d.title"
       @click="$emit('input', d.value)"
@@ -33,15 +34,15 @@ export default {
 };
 </script>
 
-<style module>
-.switcher {
+<style scoped>
+.device {
   display: inline-flex;
   padding: 3px;
   background: var(--surface-sunken);
   border-radius: var(--radius-md);
   gap: 2px;
 }
-.btn {
+.device-btn {
   padding: var(--space-1) var(--space-3);
   border: none;
   background: transparent;
@@ -52,10 +53,10 @@ export default {
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast);
 }
-.btn:hover {
+.device-btn:hover {
   color: var(--text-primary);
 }
-.active {
+.device-btn.on {
   background: var(--surface-raised);
   color: var(--text-brand);
   box-shadow: var(--shadow-xs);

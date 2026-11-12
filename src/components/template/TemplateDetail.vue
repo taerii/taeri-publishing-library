@@ -1,12 +1,13 @@
 <template>
-  <div :class="$style.detail">
-    <div :class="$style.header">
-      <div :class="$style.titleBlock">
-        <div :class="$style.titleRow">
-          <h2 :class="$style.title">{{ template.title }}</h2>
+  <div class="detail">
+    <div class="detail-head">
+      <div class="detail-info">
+        <div class="detail-row">
+          <h2 class="detail-ttl">{{ template.title }}</h2>
           <button
             type="button"
-            :class="[$style.favBtn, template.favorite && $style.favActive]"
+            class="detail-fav"
+            :class="{ on: template.favorite }"
             :aria-label="template.favorite ? '즐겨찾기 해제' : '즐겨찾기 추가'"
             :aria-pressed="String(template.favorite)"
             @click="$emit('toggle-favorite', template.id)"
@@ -14,16 +15,16 @@
             <BaseIcon name="star" :size="20" />
           </button>
         </div>
-        <p v-if="template.description" :class="$style.desc">
+        <p v-if="template.description" class="detail-desc">
           {{ template.description }}
         </p>
-        <div :class="$style.tags">
+        <div class="detail-tags">
           <BaseTag variant="brand">{{ categoryName }}</BaseTag>
           <BaseTag v-if="template.responsive" variant="success">Responsive</BaseTag>
           <BaseTag v-for="tag in template.tags" :key="tag">#{{ tag }}</BaseTag>
         </div>
       </div>
-      <div :class="$style.actions">
+      <div class="detail-act">
         <BaseButton variant="secondary" size="sm" @click="$emit('edit', template.id)">
           <template #left><BaseIcon name="edit" :size="15" /></template>
           전체 수정
@@ -36,30 +37,31 @@
     </div>
 
     <!-- 스니펫 사용 정보 -->
-    <div v-if="snippetMeta" :class="$style.infoBox">
+    <div v-if="snippetMeta" class="detail-box">
       <div v-if="snippetMeta.usage">
-        <span :class="$style.infoLabel">사용 방법</span>
+        <span class="detail-label">사용 방법</span>
         <p>{{ snippetMeta.usage }}</p>
       </div>
       <div v-if="snippetMeta.trigger">
-        <span :class="$style.infoLabel">실행 조건</span>
+        <span class="detail-label">실행 조건</span>
         <p>{{ snippetMeta.trigger }}</p>
       </div>
     </div>
 
     <!-- 코드 + 미리보기 분할 -->
-    <div :class="$style.split">
+    <div class="detail-grp">
       <!-- 코드 패널 -->
-      <section :class="$style.pane">
-        <div :class="$style.paneHead">
-          <div :class="$style.codeTabs" role="tablist">
+      <section class="detail-pane">
+        <div class="detail-top">
+          <div class="detail-tabs" role="tablist">
             <button
               v-for="tab in tabs"
               :key="tab.key"
               type="button"
               role="tab"
               :aria-selected="String(activeTab === tab.key)"
-              :class="[$style.tab, activeTab === tab.key && $style.tabActive]"
+              class="detail-tab"
+              :class="{ on: activeTab === tab.key }"
               @click="activeTab = tab.key"
             >
               {{ tab.label }}
@@ -75,8 +77,8 @@
           @input="onCodeInput"
         />
 
-        <div :class="$style.codeActions">
-          <div :class="$style.left">
+        <div class="detail-foot">
+          <div class="detail-btns">
             <BaseButton variant="ghost" size="sm" @click="copyActive">
               <template #left><BaseIcon name="copy" :size="14" /></template>
               현재 탭
@@ -86,7 +88,7 @@
               전체 복사
             </BaseButton>
           </div>
-          <div :class="$style.right">
+          <div class="detail-btns">
             <template v-if="editMode">
               <BaseButton variant="secondary" size="sm" @click="cancelEdit">취소</BaseButton>
               <BaseButton variant="primary" size="sm" :disabled="!dirty" @click="saveEdit">
@@ -103,7 +105,7 @@
       </section>
 
       <!-- 미리보기 패널 -->
-      <section :class="$style.pane">
+      <section class="detail-pane">
         <PreviewFrame :template="previewTemplate" />
       </section>
     </div>
@@ -273,37 +275,37 @@ export default {
 };
 </script>
 
-<style module>
+<style scoped>
 .detail {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
 }
-.header {
+.detail-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-4);
   flex-wrap: wrap;
 }
-.titleBlock {
+.detail-info {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   flex: 1;
   min-width: 240px;
 }
-.titleRow {
+.detail-row {
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
-.title {
+.detail-ttl {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   word-break: break-all;
 }
-.favBtn {
+.detail-fav {
   display: inline-flex;
   padding: 4px;
   border: none;
@@ -311,31 +313,31 @@ export default {
   color: var(--text-muted);
   border-radius: var(--radius-sm);
 }
-.favBtn:hover {
+.detail-fav:hover {
   color: var(--color-warning);
   background: var(--surface-sunken);
 }
-.favActive {
+.detail-fav.on {
   color: var(--color-warning);
 }
-.favActive svg {
+.detail-fav.on svg {
   fill: var(--color-warning);
 }
-.desc {
+.detail-desc {
   color: var(--text-secondary);
   line-height: var(--line-height-relaxed);
 }
-.tags {
+.detail-tags {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
 }
-.actions {
+.detail-act {
   display: flex;
   gap: var(--space-2);
   flex-shrink: 0;
 }
-.infoBox {
+.detail-box {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -345,37 +347,37 @@ export default {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
 }
-.infoLabel {
+.detail-label {
   display: block;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   color: var(--text-muted);
   margin-bottom: 2px;
 }
-.split {
+.detail-grp {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
   align-items: start;
 }
-.pane {
+.detail-pane {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   min-width: 0;
   min-height: 420px;
 }
-.paneHead {
+.detail-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-subtle);
 }
-.codeTabs {
+.detail-tabs {
   display: flex;
   gap: var(--space-1);
 }
-.tab {
+.detail-tab {
   padding: var(--space-2) var(--space-4);
   border: none;
   background: transparent;
@@ -385,27 +387,26 @@ export default {
   margin-bottom: -1px;
   cursor: pointer;
 }
-.tab:hover {
+.detail-tab:hover {
   color: var(--text-primary);
 }
-.tabActive {
+.detail-tab.on {
   color: var(--text-brand);
   border-bottom-color: var(--color-brand-500);
 }
-.codeActions {
+.detail-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
   flex-wrap: wrap;
 }
-.left,
-.right {
+.detail-btns {
   display: flex;
   gap: var(--space-2);
 }
 @media (max-width: 900px) {
-  .split {
+  .detail-grp {
     grid-template-columns: 1fr;
   }
 }

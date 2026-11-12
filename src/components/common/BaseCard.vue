@@ -1,10 +1,7 @@
 <template>
   <div
-    :class="[
-      $style.card,
-      interactive && $style.interactive,
-      padded && $style.padded,
-    ]"
+    class="card"
+    :class="{ 'card-interactive': interactive, 'card-padded': padded }"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -13,6 +10,7 @@
 </template>
 
 <script>
+/** 스타일은 styles/common.css 의 .card 계열 (card / card-padded / card-interactive) */
 export default {
   name: 'BaseCard',
   inheritAttrs: false,
@@ -22,23 +20,3 @@ export default {
   },
 };
 </script>
-
-<style module>
-.card {
-  background: var(--surface-raised);
-  border: none;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-}
-.padded {
-  padding: var(--space-5);
-}
-.interactive {
-  cursor: pointer;
-  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
-}
-.interactive:hover {
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
-}
-</style>

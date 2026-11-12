@@ -2,6 +2,7 @@
    Global styles & reset - Publishing Library
    ============================================================= */
 @import './tokens.css';
+@import './common.css';
 
 *,
 *::before,

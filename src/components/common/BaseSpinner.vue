@@ -1,6 +1,6 @@
 <template>
   <span
-    :class="$style.spinner"
+    class="spinner"
     :style="{ width: size + 'px', height: size + 'px' }"
     role="status"
     :aria-label="label"
@@ -17,7 +17,7 @@ export default {
 };
 </script>
 
-<style module>
+<style scoped>
 .spinner {
   display: inline-block;
   border: 2px solid var(--color-neutral-200);

@@ -1,22 +1,23 @@
 <template>
   <BaseCard
     interactive
-    :class="$style.card"
+    class="tcard"
     role="button"
     tabindex="0"
     @click="$emit('open', template.id)"
     @keydown.enter.native="$emit('open', template.id)"
   >
-    <div v-if="thumbUrl" :class="$style.thumb">
+    <div v-if="thumbUrl" class="tcard-thumb">
       <img :src="thumbUrl" :alt="template.title + ' 썸네일'" loading="lazy" />
     </div>
 
-    <div :class="$style.head">
-      <div :class="$style.titleRow">
-        <h3 :class="$style.title">{{ template.title || '(제목 없음)' }}</h3>
+    <div class="tcard-head">
+      <div class="tcard-row">
+        <h3 class="tcard-ttl">{{ template.title || '(제목 없음)' }}</h3>
         <button
           type="button"
-          :class="[$style.favBtn, template.favorite && $style.favActive]"
+          class="tcard-fav"
+          :class="{ on: template.favorite }"
           :aria-label="template.favorite ? '즐겨찾기 해제' : '즐겨찾기 추가'"
           :aria-pressed="String(template.favorite)"
           @click.stop="$emit('toggle-favorite', template.id)"
@@ -24,25 +25,25 @@
           <BaseIcon name="star" :size="18" />
         </button>
       </div>
-      <p v-if="template.description" :class="$style.desc">
+      <p v-if="template.description" class="tcard-desc">
         {{ template.description }}
       </p>
     </div>
 
-    <div :class="$style.meta">
+    <div class="tcard-meta">
       <BaseTag variant="brand">{{ categoryName }}</BaseTag>
       <BaseTag v-if="template.responsive" variant="success">Responsive</BaseTag>
       <BaseTag v-for="tag in visibleTags" :key="tag">#{{ tag }}</BaseTag>
       <BaseTag v-if="hiddenTagCount > 0">+{{ hiddenTagCount }}</BaseTag>
     </div>
 
-    <div :class="$style.footer">
-      <span :class="$style.langs">
-        <span v-if="template.html" :class="$style.lang">HTML</span>
-        <span v-if="template.css" :class="$style.lang">CSS</span>
-        <span v-if="template.javascript" :class="$style.lang">JS</span>
+    <div class="tcard-foot">
+      <span class="tcard-langs">
+        <span v-if="template.html" class="tcard-lang">HTML</span>
+        <span v-if="template.css" class="tcard-lang">CSS</span>
+        <span v-if="template.javascript" class="tcard-lang">JS</span>
       </span>
-      <span :class="$style.date">{{ updatedText }}</span>
+      <time class="time" :datetime="updatedIso">{{ updatedText }}</time>
     </div>
   </BaseCard>
 </template>
@@ -90,6 +91,9 @@ export default {
     updatedText() {
       return formatRelative(this.template.updatedAt);
     },
+    updatedIso() {
+      return new Date(this.template.updatedAt).toISOString();
+    },
   },
   methods: {
     async loadThumb() {
@@ -112,41 +116,42 @@ export default {
 };
 </script>
 
-<style module>
-.card {
+<!-- card / time 은 styles/common.css 의 공통 클래스 -->
+<style scoped>
+.tcard {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   height: 100%;
 }
-.thumb {
+.tcard-thumb {
   margin: calc(var(--space-5) * -1) calc(var(--space-5) * -1) 0;
   height: 140px;
   overflow: hidden;
   background: var(--surface-sunken);
 }
-.thumb img {
+.tcard-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.head {
+.tcard-head {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
-.titleRow {
+.tcard-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-2);
 }
-.title {
+.tcard-ttl {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   word-break: break-all;
 }
-.favBtn {
+.tcard-fav {
   flex-shrink: 0;
   display: inline-flex;
   padding: 4px;
@@ -156,17 +161,17 @@ export default {
   border-radius: var(--radius-sm);
   transition: color var(--transition-fast), background var(--transition-fast);
 }
-.favBtn:hover {
+.tcard-fav:hover {
   background: var(--surface-sunken);
   color: var(--color-warning);
 }
-.favActive {
+.tcard-fav.on {
   color: var(--color-warning);
 }
-.favActive svg {
+.tcard-fav.on svg {
   fill: var(--color-warning);
 }
-.desc {
+.tcard-desc {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
   display: -webkit-box;
@@ -174,24 +179,24 @@ export default {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.meta {
+.tcard-meta {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: auto;
 }
-.footer {
+.tcard-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-top: var(--space-3);
   border-top: 1px solid var(--border-subtle);
 }
-.langs {
+.tcard-langs {
   display: flex;
   gap: var(--space-1);
 }
-.lang {
+.tcard-lang {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: var(--font-weight-semibold);
@@ -199,9 +204,5 @@ export default {
   border-radius: var(--radius-sm);
   background: var(--surface-sunken);
   color: var(--text-secondary);
-}
-.date {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
 }
 </style>

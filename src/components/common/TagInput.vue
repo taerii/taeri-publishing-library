@@ -1,12 +1,12 @@
 <template>
-  <div :class="$style.field">
-    <label v-if="label" :class="$style.label">{{ label }}</label>
-    <div :class="$style.box" @click="focusInput">
-      <span v-for="(tag, i) in value" :key="tag + i" :class="$style.chip">
+  <div class="field">
+    <label v-if="label" class="field-label">{{ label }}</label>
+    <div class="tagin-box" @click="focusInput">
+      <span v-for="(tag, i) in value" :key="tag + i" class="tagin-chip">
         {{ tag }}
         <button
           type="button"
-          :class="$style.remove"
+          class="tagin-btn"
           :aria-label="tag + ' 태그 제거'"
           @click.stop="removeTag(i)"
         >
@@ -16,7 +16,7 @@
       <input
         ref="input"
         v-model="draft"
-        :class="$style.input"
+        class="tagin-input"
         :placeholder="value.length ? '' : placeholder"
         @keydown.enter.prevent="commit"
         @keydown.188.prevent="commit"
@@ -24,7 +24,7 @@
         @blur="commit"
       />
     </div>
-    <p :class="$style.hint">{{ hint }}</p>
+    <p class="field-hint">{{ hint }}</p>
   </div>
 </template>
 
@@ -72,18 +72,9 @@ export default {
 };
 </script>
 
-<style module>
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-.label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-secondary);
-}
-.box {
+<!-- field / field-label / field-hint 는 styles/common.css -->
+<style scoped>
+.tagin-box {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -95,11 +86,11 @@ export default {
   border-radius: var(--radius-md);
   cursor: text;
 }
-.box:focus-within {
+.tagin-box:focus-within {
   border-color: var(--color-brand-500);
   box-shadow: var(--focus-ring);
 }
-.chip {
+.tagin-chip {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
@@ -110,7 +101,7 @@ export default {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
 }
-.remove {
+.tagin-btn {
   display: inline-flex;
   align-items: center;
   border: none;
@@ -119,10 +110,10 @@ export default {
   cursor: pointer;
   padding: 0;
 }
-.remove:hover {
+.tagin-btn:hover {
   color: var(--color-brand-800);
 }
-.input {
+.tagin-input {
   flex: 1;
   min-width: 120px;
   height: 28px;
@@ -130,9 +121,5 @@ export default {
   outline: none;
   background: transparent;
   color: var(--text-primary);
-}
-.hint {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
 }
 </style>

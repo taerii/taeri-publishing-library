@@ -1,37 +1,38 @@
 <template>
   <div>
     <div
-      :class="[$style.backdrop, sidebarOpen && $style.backdropVisible]"
+      class="sidebar-dim"
+      :class="{ on: sidebarOpen }"
       aria-hidden="true"
       @click="setSidebar(false)"
     />
-    <aside :class="[$style.sidebar, sidebarOpen && $style.open]" aria-label="주요 메뉴">
-      <div :class="$style.brand">
-        <span :class="$style.brandIcon">
+    <aside class="sidebar" :class="{ on: sidebarOpen }" aria-label="주요 메뉴">
+      <div class="sidebar-brand">
+        <span class="sidebar-logo">
           <BaseIcon name="library" :size="20" />
         </span>
-        <span :class="$style.brandText">
-          Publishing<span :class="$style.brandAccent">Library</span>
+        <span class="sidebar-ttl">
+          Publishing<span class="sidebar-accent">Library</span>
         </span>
       </div>
 
-      <nav :class="$style.nav">
+      <nav class="sidebar-nav">
         <router-link
           v-for="item in navItems"
           :key="item.to"
           :to="item.to"
-          :class="$style.navItem"
-          :active-class="$style.navItemActive"
+          class="sidebar-link"
+          active-class="on"
           :exact="item.to === '/'"
           @click.native="setSidebar(false)"
         >
-          <BaseIcon :name="item.icon" :size="18" :class="$style.navIcon" />
+          <BaseIcon :name="item.icon" :size="18" class="sidebar-i" />
           <span>{{ item.label }}</span>
         </router-link>
       </nav>
 
-      <div :class="$style.footer">
-        <span :class="$style.footerText">Local-first · v0.1.0</span>
+      <div class="sidebar-foot">
+        <span class="sidebar-txt">Local-first · v0.1.0</span>
       </div>
     </aside>
   </div>
@@ -57,7 +58,7 @@ export default {
 };
 </script>
 
-<style module>
+<style scoped>
 .sidebar {
   position: fixed;
   top: 0;
@@ -71,7 +72,7 @@ export default {
   color: var(--text-secondary);
   border-right: 1px solid var(--border-subtle);
 }
-.brand {
+.sidebar-brand {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -79,7 +80,7 @@ export default {
   padding: 0 var(--space-5);
   border-bottom: 1px solid var(--border-subtle);
 }
-.brandIcon {
+.sidebar-logo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -90,16 +91,16 @@ export default {
   color: var(--text-inverse);
   box-shadow: var(--shadow-brand);
 }
-.brandText {
+.sidebar-ttl {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--text-primary);
   letter-spacing: -0.01em;
 }
-.brandAccent {
+.sidebar-accent {
   color: var(--color-brand-600);
 }
-.nav {
+.sidebar-nav {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -107,7 +108,7 @@ export default {
   padding: var(--space-4) var(--space-3);
   overflow-y: auto;
 }
-.navItem {
+.sidebar-link {
   position: relative;
   display: flex;
   align-items: center;
@@ -120,19 +121,23 @@ export default {
   transition: background var(--transition-fast), color var(--transition-fast),
     transform var(--transition-fast);
 }
-.navItem:hover {
+.sidebar-link:hover {
   background: var(--color-primary-light); /* #FCE8EF */
   color: var(--color-primary-hover); /* #A9365D (글자 + 아이콘) */
 }
-.navItem:active {
+.sidebar-link:active {
   transform: scale(0.98);
 }
-.navItemActive {
+/* 선택된 메뉴: 호버해도 핑크 채움 + 흰 글씨 유지 */
+.sidebar-link.on,
+.sidebar-link.on:hover {
   background: var(--gradient-brand);
   color: var(--text-inverse);
+}
+.sidebar-link.on {
   box-shadow: var(--shadow-brand);
 }
-.navItemActive::before {
+.sidebar-link.on::before {
   content: '';
   position: absolute;
   left: -12px;
@@ -143,22 +148,18 @@ export default {
   border-radius: var(--radius-full);
   background: var(--color-brand-600);
 }
-.navItemActive:hover {
-  background: var(--gradient-brand);
-  color: var(--text-inverse);
-}
-.navIcon {
+.sidebar-i {
   flex-shrink: 0;
 }
-.footer {
+.sidebar-foot {
   padding: var(--space-4) var(--space-5);
   border-top: 1px solid var(--border-subtle);
 }
-.footerText {
+.sidebar-txt {
   font-size: var(--font-size-xs);
   color: var(--text-muted);
 }
-.backdrop {
+.sidebar-dim {
   display: none;
 }
 
@@ -168,10 +169,10 @@ export default {
     transition: transform var(--transition-base);
     box-shadow: var(--shadow-xl);
   }
-  .open {
+  .sidebar.on {
     transform: translateX(0);
   }
-  .backdrop {
+  .sidebar-dim {
     display: block;
     position: fixed;
     inset: 0;
@@ -181,7 +182,7 @@ export default {
     pointer-events: none;
     transition: opacity var(--transition-base);
   }
-  .backdropVisible {
+  .sidebar-dim.on {
     opacity: 1;
     pointer-events: auto;
   }

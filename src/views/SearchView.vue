@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="search">
     <PageHeader title="통합 검색" :description="headerDesc" />
 
-    <div :class="$style.filters">
-      <div :class="$style.search">
+    <div class="search-filter">
+      <div class="search-input">
         <BaseInput
           v-model="query"
           type="search"
@@ -16,15 +16,15 @@
       <BaseSelect v-model="type" :options="typeOptions" />
       <BaseSelect v-model="tech" :options="techOptions" />
       <BaseSelect v-model="sort" :options="sortOptions" />
-      <label :class="$style.favFilter">
+      <label class="search-chk">
         <input v-model="favoriteOnly" type="checkbox" />
         <span>즐겨찾기만</span>
       </label>
     </div>
 
-    <p :class="$style.count">{{ results.length }}개 결과</p>
+    <p class="search-cnt">{{ results.length }}개 결과</p>
 
-    <div v-if="results.length" :class="$style.grid">
+    <div v-if="results.length" class="search-grp">
       <TemplateCard
         v-for="t in results"
         :key="t.id"
@@ -195,19 +195,19 @@ export default {
 };
 </script>
 
-<style module>
-.filters {
+<style scoped>
+.search-filter {
   display: flex;
   gap: var(--space-3);
   align-items: center;
   margin-bottom: var(--space-4);
   flex-wrap: wrap;
 }
-.search {
+.search-input {
   flex: 1;
   min-width: 240px;
 }
-.favFilter {
+.search-chk {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -216,12 +216,12 @@ export default {
   white-space: nowrap;
   cursor: pointer;
 }
-.count {
+.search-cnt {
   font-size: var(--font-size-sm);
   color: var(--text-muted);
   margin-bottom: var(--space-4);
 }
-.grid {
+.search-grp {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--space-4);

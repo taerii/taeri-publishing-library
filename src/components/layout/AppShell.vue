@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style.shell">
+  <div class="shell">
     <AppSidebar />
-    <div :class="$style.main">
+    <div class="shell-wrap">
       <AppTopbar />
-      <main :class="$style.content">
+      <main class="shell-cont">
         <router-view />
       </main>
     </div>
@@ -22,18 +22,18 @@ export default {
 };
 </script>
 
-<style module>
+<style scoped>
 .shell {
   min-height: 100%;
 }
-.main {
+.shell-wrap {
   margin-left: var(--sidebar-width);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   transition: margin-left var(--transition-base);
 }
-.content {
+.shell-cont {
   flex: 1;
   width: 100%;
   max-width: var(--content-max-width);
@@ -41,10 +41,10 @@ export default {
   padding: var(--space-8) var(--space-6);
 }
 @media (max-width: 960px) {
-  .main {
+  .shell-wrap {
     margin-left: 0;
   }
-  .content {
+  .shell-cont {
     padding: var(--space-6) var(--space-4);
   }
 }

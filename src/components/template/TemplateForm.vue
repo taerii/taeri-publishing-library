@@ -1,6 +1,6 @@
 <template>
-  <form :class="$style.form" @submit.prevent="requestSubmit">
-    <div :class="$style.grid">
+  <form class="form" @submit.prevent="requestSubmit">
+    <div class="form-grp">
       <BaseInput
         v-model="draft.title"
         label="제목 *"
@@ -27,7 +27,7 @@
 
     <!-- 스니펫 전용 메타 -->
     <template v-if="draft.type === 'snippet'">
-      <div :class="$style.grid">
+      <div class="form-grp">
         <BaseSelect
           v-model="draft.meta.lang"
           label="주 언어"
@@ -48,31 +48,31 @@
     </template>
 
     <!-- 반응형 토글 (component/page) -->
-    <label v-if="draft.type !== 'snippet'" :class="$style.checkRow">
+    <label v-if="draft.type !== 'snippet'" class="form-chk">
       <input v-model="draft.responsive" type="checkbox" />
       <span>반응형(Responsive) 지원</span>
     </label>
 
     <!-- 외부 의존성 (미리보기에서 로드) -->
-    <div :class="$style.block">
-      <div :class="$style.blockHead">
-        <span :class="$style.blockLabel">외부 라이브러리 (CDN)</span>
+    <div class="form-box">
+      <div class="form-head">
+        <span class="form-label">외부 라이브러리 (CDN)</span>
         <BaseButton variant="ghost" size="sm" type="button" @click="addDependency">
           <template #left><BaseIcon name="plus" :size="14" /></template>
           추가
         </BaseButton>
       </div>
-      <p v-if="!draft.dependencies.length" :class="$style.blockHint">
+      <p v-if="!draft.dependencies.length" class="form-hint">
         Swiper 등 외부 라이브러리의 CDN URL을 추가하면 미리보기에서 함께 로드됩니다.
       </p>
       <div
         v-for="(dep, i) in draft.dependencies"
         :key="i"
-        :class="$style.depRow"
+        class="form-dep"
       >
-        <BaseInput v-model="dep.name" placeholder="이름 (예: Swiper)" :class="$style.depName" />
-        <BaseInput v-model="dep.url" placeholder="https://cdn.../lib.js" :class="$style.depUrl" />
-        <BaseSelect v-model="dep.kind" :options="depKinds" :class="$style.depKind" />
+        <BaseInput v-model="dep.name" placeholder="이름 (예: Swiper)" class="form-cell" />
+        <BaseInput v-model="dep.url" placeholder="https://cdn.../lib.js" class="form-cell" />
+        <BaseSelect v-model="dep.kind" :options="depKinds" class="form-cell" />
         <BaseButton
           variant="ghost"
           size="sm"
@@ -87,13 +87,13 @@
     </div>
 
     <!-- 썸네일 (component/page) -->
-    <div v-if="draft.type !== 'snippet'" :class="$style.block">
-      <span :class="$style.blockLabel">썸네일</span>
-      <div :class="$style.thumbRow">
-        <div v-if="thumbPreview" :class="$style.thumbPreview">
+    <div v-if="draft.type !== 'snippet'" class="form-box">
+      <span class="form-label">썸네일</span>
+      <div class="form-thumb">
+        <div v-if="thumbPreview" class="form-thumb-img">
           <img :src="thumbPreview" alt="썸네일 미리보기" />
         </div>
-        <div :class="$style.thumbActions">
+        <div class="form-thumb-act">
           <BaseButton variant="secondary" size="sm" type="button" @click="pickThumbnail">
             이미지 선택
           </BaseButton>
@@ -110,15 +110,16 @@
       </div>
     </div>
 
-    <!-- 코드 입력 (Phase 3 에서 CodeMirror 로 교체 예정) -->
-    <div :class="$style.codeTabs" role="tablist">
+    <!-- 코드 입력 -->
+    <div class="form-tabs" role="tablist">
       <button
         v-for="tab in codeTabs"
         :key="tab.key"
         type="button"
         role="tab"
         :aria-selected="String(activeTab === tab.key)"
-        :class="[$style.tab, activeTab === tab.key && $style.tabActive]"
+        class="form-tab"
+        :class="{ on: activeTab === tab.key }"
         @click="activeTab = tab.key"
       >
         {{ tab.label }}
@@ -134,7 +135,7 @@
       <CodeEditor v-model="draft.javascript" lang="js" />
     </div>
 
-    <div :class="$style.actions">
+    <div class="form-foot">
       <BaseButton variant="secondary" type="button" @click="$emit('cancel')">
         취소
       </BaseButton>
@@ -328,18 +329,18 @@ export default {
 };
 </script>
 
-<style module>
+<style scoped>
 .form {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
-.grid {
+.form-grp {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
 }
-.checkRow {
+.form-chk {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -347,12 +348,12 @@ export default {
   color: var(--text-secondary);
   cursor: pointer;
 }
-.codeTabs {
+.form-tabs {
   display: flex;
   gap: var(--space-1);
   border-bottom: 1px solid var(--border-subtle);
 }
-.tab {
+.form-tab {
   padding: var(--space-2) var(--space-4);
   border: none;
   background: transparent;
@@ -362,20 +363,20 @@ export default {
   margin-bottom: -1px;
   cursor: pointer;
 }
-.tab:hover {
+.form-tab:hover {
   color: var(--text-primary);
 }
-.tabActive {
+.form-tab.on {
   color: var(--text-brand);
   border-bottom-color: var(--color-brand-500);
 }
-.actions {
+.form-foot {
   display: flex;
   justify-content: flex-end;
   gap: var(--space-3);
   padding-top: var(--space-2);
 }
-.block {
+.form-box {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -383,37 +384,35 @@ export default {
   background: var(--surface-sunken);
   border-radius: var(--radius-md);
 }
-.blockHead {
+.form-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.blockLabel {
+.form-label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--text-secondary);
 }
-.blockHint {
+.form-hint {
   font-size: var(--font-size-xs);
   color: var(--text-muted);
 }
-.depRow {
+.form-dep {
   display: grid;
   grid-template-columns: 1fr 2fr auto auto;
   gap: var(--space-2);
   align-items: start;
 }
-.depName,
-.depUrl,
-.depKind {
+.form-cell {
   min-width: 0;
 }
-.thumbRow {
+.form-thumb {
   display: flex;
   align-items: center;
   gap: var(--space-4);
 }
-.thumbPreview {
+.form-thumb-img {
   width: 96px;
   height: 64px;
   border-radius: var(--radius-md);
@@ -421,20 +420,20 @@ export default {
   border: 1px solid var(--border-subtle);
   background: var(--surface-raised);
 }
-.thumbPreview img {
+.form-thumb-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.thumbActions {
+.form-thumb-act {
   display: flex;
   gap: var(--space-2);
 }
 @media (max-width: 640px) {
-  .grid {
+  .form-grp {
     grid-template-columns: 1fr;
   }
-  .depRow {
+  .form-dep {
     grid-template-columns: 1fr;
   }
 }

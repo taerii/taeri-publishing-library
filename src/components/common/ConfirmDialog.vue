@@ -1,6 +1,6 @@
 <template>
   <BaseModal :open="open" :title="title" size="sm" @close="$emit('cancel')">
-    <p :class="$style.message">{{ message }}</p>
+    <p class="confirm-txt">{{ message }}</p>
     <slot />
     <template #footer>
       <BaseButton variant="secondary" @click="$emit('cancel')">
@@ -31,8 +31,8 @@ export default {
 };
 </script>
 
-<style module>
-.message {
+<style scoped>
+.confirm-txt {
   color: var(--text-secondary);
   line-height: var(--line-height-relaxed);
 }

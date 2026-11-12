@@ -1,10 +1,10 @@
 <template>
-  <div :class="$style.header">
-    <div :class="$style.titles">
-      <h1 :class="$style.title">{{ title }}</h1>
-      <p v-if="description" :class="$style.description">{{ description }}</p>
+  <div class="page-head">
+    <div class="page-info">
+      <h1 class="page-ttl">{{ title }}</h1>
+      <p v-if="description" class="page-desc">{{ description }}</p>
     </div>
-    <div v-if="$slots.actions" :class="$style.actions">
+    <div v-if="$slots.actions" class="page-act">
       <slot name="actions" />
     </div>
   </div>
@@ -20,8 +20,8 @@ export default {
 };
 </script>
 
-<style module>
-.header {
+<style scoped>
+.page-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -29,21 +29,21 @@ export default {
   margin-bottom: var(--space-6);
   flex-wrap: wrap;
 }
-.titles {
+.page-info {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
 }
-.title {
+.page-ttl {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   letter-spacing: -0.01em;
 }
-.description {
+.page-desc {
   font-size: var(--font-size-md);
   color: var(--text-secondary);
 }
-.actions {
+.page-act {
   display: flex;
   align-items: center;
   gap: var(--space-2);

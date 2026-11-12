@@ -1,21 +1,22 @@
 <template>
-  <div>
+  <div class="fav">
     <PageHeader title="Favorites" description="즐겨찾기한 템플릿을 모아봅니다." />
 
-    <div :class="$style.filters">
+    <div class="fav-filter">
       <button
         v-for="opt in typeFilters"
         :key="opt.value"
         type="button"
-        :class="[$style.chip, typeFilter === opt.value && $style.chipActive]"
+        class="fav-btn"
+        :class="{ on: typeFilter === opt.value }"
         @click="typeFilter = opt.value"
       >
         {{ opt.label }}
-        <span :class="$style.badge">{{ countFor(opt.value) }}</span>
+        <span class="fav-badge">{{ countFor(opt.value) }}</span>
       </button>
     </div>
 
-    <div v-if="filtered.length" :class="$style.grid">
+    <div v-if="filtered.length" class="fav-grp">
       <TemplateCard
         v-for="t in filtered"
         :key="t.id"
@@ -83,14 +84,14 @@ export default {
 };
 </script>
 
-<style module>
-.filters {
+<style scoped>
+.fav-filter {
   display: flex;
   gap: var(--space-2);
   margin-bottom: var(--space-6);
   flex-wrap: wrap;
 }
-.chip {
+.fav-btn {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -104,16 +105,16 @@ export default {
   cursor: pointer;
   transition: all var(--transition-fast);
 }
-.chip:hover {
+.fav-btn:hover {
   border-color: var(--color-brand-300);
 }
-.chipActive {
+.fav-btn.on {
   background: var(--gradient-brand);
   border-color: transparent;
   color: var(--text-inverse);
   box-shadow: var(--shadow-brand);
 }
-.badge {
+.fav-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -125,11 +126,11 @@ export default {
   color: var(--text-secondary);
   font-size: 11px;
 }
-.chipActive .badge {
+.fav-btn.on .fav-badge {
   background: rgba(255, 255, 255, 0.2);
   color: var(--text-inverse);
 }
-.grid {
+.fav-grp {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--space-4);

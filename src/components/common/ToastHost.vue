@@ -1,16 +1,17 @@
 <template>
-  <div v-if="toasts.length" :class="$style.host" aria-live="polite">
+  <div v-if="toasts.length" class="toast" aria-live="polite">
     <div
       v-for="t in toasts"
       :key="t.id"
-      :class="[$style.toast, $style[t.variant]]"
+      class="toast-box"
+      :class="t.variant"
       role="alert"
     >
-      <BaseIcon :name="iconName(t.variant)" :size="18" :class="$style.icon" />
-      <span :class="$style.message">{{ t.message }}</span>
+      <BaseIcon :name="iconName(t.variant)" :size="18" class="toast-i" />
+      <span class="toast-txt">{{ t.message }}</span>
       <button
         type="button"
-        :class="$style.close"
+        class="toast-btn"
         aria-label="알림 닫기"
         @click="dismiss(t.id)"
       >
@@ -71,8 +72,8 @@ export default {
 };
 </script>
 
-<style module>
-.host {
+<style scoped>
+.toast {
   position: fixed;
   bottom: var(--space-6);
   right: var(--space-6);
@@ -82,7 +83,7 @@ export default {
   gap: var(--space-2);
   max-width: 360px;
 }
-.toast {
+.toast-box {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -104,15 +105,15 @@ export default {
     opacity: 1;
   }
 }
-.icon {
+.toast-i {
   flex-shrink: 0;
 }
-.message {
+.toast-txt {
   flex: 1;
   font-size: var(--font-size-sm);
   color: var(--text-primary);
 }
-.close {
+.toast-btn {
   flex-shrink: 0;
   display: inline-flex;
   padding: 2px;
@@ -121,32 +122,33 @@ export default {
   color: var(--text-muted);
   border-radius: var(--radius-sm);
 }
-.close:hover {
+.toast-btn:hover {
   color: var(--text-primary);
   background: var(--surface-sunken);
 }
-.success {
+/* 종류별 색 */
+.toast-box.success {
   border-left-color: var(--color-success);
 }
-.success .icon {
+.toast-box.success .toast-i {
   color: var(--color-success);
 }
-.error {
+.toast-box.error {
   border-left-color: var(--color-danger);
 }
-.error .icon {
+.toast-box.error .toast-i {
   color: var(--color-danger);
 }
-.info {
+.toast-box.info {
   border-left-color: var(--color-info);
 }
-.info .icon {
+.toast-box.info .toast-i {
   color: var(--color-info);
 }
-.warning {
+.toast-box.warning {
   border-left-color: var(--color-warning);
 }
-.warning .icon {
+.toast-box.warning .toast-i {
   color: var(--color-warning);
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <header :class="$style.topbar">
+  <header class="topbar">
     <BaseButton
-      :class="$style.menuButton"
+      class="topbar-btn"
       variant="ghost"
       size="md"
       icon-only
@@ -11,7 +11,7 @@
       <BaseIcon name="menu" :size="20" />
     </BaseButton>
 
-    <form :class="$style.search" role="search" @submit.prevent="submitSearch">
+    <form class="topbar-search" role="search" @submit.prevent="submitSearch">
       <BaseInput
         v-model="query"
         type="search"
@@ -24,7 +24,7 @@
       </BaseInput>
     </form>
 
-    <div :class="$style.actions">
+    <div class="topbar-act">
       <!-- 주요 액션은 각 화면에서 확장 -->
     </div>
   </header>
@@ -52,7 +52,7 @@ export default {
 };
 </script>
 
-<style module>
+<style scoped>
 .topbar {
   position: sticky;
   top: 0;
@@ -67,21 +67,21 @@ export default {
   -webkit-backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--border-subtle);
 }
-.menuButton {
+.topbar-btn {
   display: none;
 }
-.search {
+.topbar-search {
   flex: 1;
   max-width: 520px;
 }
-.actions {
+.topbar-act {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   margin-left: auto;
 }
 @media (max-width: 960px) {
-  .menuButton {
+  .topbar-btn {
     display: inline-flex;
   }
   .topbar {

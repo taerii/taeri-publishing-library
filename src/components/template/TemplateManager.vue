@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="manager">
     <PageHeader :title="typeMeta.label + 's'" :description="description">
       <template #actions>
         <BaseButton variant="primary" @click="openCreate">
@@ -10,8 +10,8 @@
     </PageHeader>
 
     <!-- 필터 바 -->
-    <div :class="$style.filters">
-      <div :class="$style.search">
+    <div class="manager-filter">
+      <div class="manager-search">
         <BaseInput v-model="query" type="search" placeholder="이름, 설명, 태그 검색">
           <template #left><BaseIcon name="search" :size="16" /></template>
         </BaseInput>
@@ -19,16 +19,16 @@
       <BaseSelect v-model="categoryFilter" :options="categoryFilterOptions" />
       <BaseSelect v-model="tech" :options="techOptions" />
       <BaseSelect v-model="sort" :options="sortOptions" />
-      <label :class="$style.favFilter">
+      <label class="manager-chk">
         <input v-model="favoriteOnly" type="checkbox" />
         <span>즐겨찾기만</span>
       </label>
     </div>
 
-    <p :class="$style.count">{{ filtered.length }}개 항목</p>
+    <p class="manager-cnt">{{ filtered.length }}개 항목</p>
 
     <!-- 목록 -->
-    <div v-if="filtered.length" :class="$style.grid">
+    <div v-if="filtered.length" class="manager-grp">
       <TemplateCard
         v-for="t in filtered"
         :key="t.id"
@@ -289,19 +289,19 @@ export default {
 };
 </script>
 
-<style module>
-.filters {
+<style scoped>
+.manager-filter {
   display: flex;
   gap: var(--space-3);
   align-items: center;
   margin-bottom: var(--space-4);
   flex-wrap: wrap;
 }
-.search {
+.manager-search {
   flex: 1;
   min-width: 220px;
 }
-.favFilter {
+.manager-chk {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -310,12 +310,12 @@ export default {
   white-space: nowrap;
   cursor: pointer;
 }
-.count {
+.manager-cnt {
   font-size: var(--font-size-sm);
   color: var(--text-muted);
   margin-bottom: var(--space-4);
 }
-.grid {
+.manager-grp {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--space-4);

@@ -1,6 +1,6 @@
 <template>
-  <div :class="$style.note">
-    <span :class="$style.phase">{{ phase }}</span>
+  <div class="phase-box">
+    <span class="phase-badge">{{ phase }}</span>
     <p><slot /></p>
   </div>
 </template>
@@ -14,8 +14,8 @@ export default {
 };
 </script>
 
-<style module>
-.note {
+<style scoped>
+.phase-box {
   padding: var(--space-6);
   background: var(--surface-raised);
   border: 1px dashed var(--border-default);
@@ -23,7 +23,7 @@ export default {
   color: var(--text-secondary);
   font-size: var(--font-size-md);
 }
-.phase {
+.phase-badge {
   display: inline-block;
   margin-bottom: var(--space-2);
   padding: 4px 10px;

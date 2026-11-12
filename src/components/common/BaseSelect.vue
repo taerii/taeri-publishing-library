@@ -1,10 +1,11 @@
 <template>
-  <div :class="$style.field">
-    <label v-if="label" :class="$style.label" :for="inputId">{{ label }}</label>
-    <div :class="$style.wrap">
+  <div class="field">
+    <label v-if="label" class="field-label" :for="inputId">{{ label }}</label>
+    <div class="select-wrap">
       <select
         :id="inputId"
-        :class="[$style.select, error && $style.hasError]"
+        class="field-ctrl select-ctrl"
+        :class="{ 'is-error': error }"
         :value="value"
         v-bind="$attrs"
         @change="$emit('input', $event.target.value)"
@@ -14,9 +15,9 @@
           {{ opt.label }}
         </option>
       </select>
-      <BaseIcon name="code" :size="14" :class="$style.caret" />
+      <BaseIcon name="code" :size="14" class="select-i" />
     </div>
-    <p v-if="error" :class="$style.error">{{ error }}</p>
+    <p v-if="error" class="field-error">{{ error }}</p>
   </div>
 </template>
 
@@ -55,51 +56,23 @@ export default {
 };
 </script>
 
-<style module>
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-.label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-secondary);
-}
-.wrap {
+<!-- field / field-label / field-ctrl / field-error 는 styles/common.css -->
+<style scoped>
+.select-wrap {
   position: relative;
   display: flex;
   align-items: center;
 }
-.select {
-  width: 100%;
-  height: 38px;
+.select-ctrl {
   padding: 0 var(--space-6) 0 var(--space-3);
-  background: var(--surface-raised);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
-  color: var(--text-primary);
   appearance: none;
   cursor: pointer;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
-.select:focus {
-  outline: none;
-  border-color: var(--color-brand-500);
-  box-shadow: var(--focus-ring);
-}
-.hasError {
-  border-color: var(--color-danger);
-}
-.caret {
+.select-i {
   position: absolute;
   right: var(--space-3);
   color: var(--text-muted);
   pointer-events: none;
   transform: rotate(90deg);
-}
-.error {
-  font-size: var(--font-size-xs);
-  color: var(--color-danger);
 }
 </style>

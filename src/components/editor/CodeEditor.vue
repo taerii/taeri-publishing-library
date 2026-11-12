@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style.wrap">
-    <div v-if="loadingEditor" :class="$style.loading">
+  <div class="editor">
+    <div v-if="loadingEditor" class="editor-load">
       <BaseSpinner :size="18" /> 에디터 불러오는 중...
     </div>
-    <div ref="host" :class="$style.host"></div>
+    <div ref="host" class="editor-host"></div>
   </div>
 </template>
 
@@ -101,14 +101,14 @@ export default {
 };
 </script>
 
-<style module>
-.wrap {
+<style scoped>
+.editor {
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--surface-raised);
 }
-.loading {
+.editor-load {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -116,11 +116,12 @@ export default {
   font-size: var(--font-size-sm);
   color: var(--text-muted);
 }
-.host {
+.editor-host {
   max-height: 420px;
   overflow: auto;
 }
-.host :global(.cm-editor) {
+/* .cm-editor 는 CodeMirror 가 직접 만드는 요소라 scoped 가 닿지 않아 ::v-deep 사용 */
+.editor-host ::v-deep .cm-editor {
   min-height: 160px;
 }
 </style>
